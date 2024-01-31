@@ -1134,7 +1134,7 @@ namespace precalculate
                 container[idx_L] = new std::complex<double> ***[mL_num];
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = L + 1;
+                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
                     container[idx_L][idx_mL] = new std::complex<double> **[l_num];
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
@@ -1169,7 +1169,7 @@ namespace precalculate
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
                     int mL = idx_mL - L;
-                    int l_num = L + 1;
+                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;
@@ -1202,7 +1202,7 @@ namespace precalculate
                 int mL_num = 2 * L + 1;
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = L + 1;
+                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;
@@ -1238,7 +1238,7 @@ namespace precalculate
                 container[idx_L] = new std::complex<double> ***[mL_num];
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = L + 1;
+                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
                     container[idx_L][idx_mL] = new std::complex<double> **[l_num];
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
@@ -1273,7 +1273,7 @@ namespace precalculate
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
                     int mL = idx_mL - L;
-                    int l_num = L + 1;
+                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;
@@ -1306,7 +1306,7 @@ namespace precalculate
                 int mL_num = 2 * L + 1;
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = L + 1;
+                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;
