@@ -51,6 +51,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idx_angle = left_angular_index; idx_angle < right_angular_index; idx_angle = idx_angle + 1)
             {
                 int idx_thetaq = (idx_angle / (Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle));
@@ -61,6 +62,9 @@ namespace precalculate
                 double weight = get_integration_weight(idx_thetaq, idx_thetapp, idx_phipp, idx_thetaqp, idx_phiqp);
                 container[idx_angle - left_angular_index] = weight;
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "5-dim angular integration weights calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         double get_value(int idx_angle)
@@ -431,6 +435,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -453,6 +458,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_TPE1_12 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_TPE1_12_Container()
@@ -511,6 +519,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -533,6 +542,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_TPE1_13 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_TPE1_13_Container()
@@ -591,6 +603,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -613,6 +626,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_TPE1_23 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_TPE1_23_Container()
@@ -671,6 +687,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -693,6 +710,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_TPE2_12 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_TPE2_12_Container()
@@ -751,6 +771,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -773,6 +794,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_TPE2_13 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_TPE2_13_Container()
@@ -831,6 +855,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -853,6 +878,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_TPE2_23 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_TPE2_23_Container()
@@ -911,6 +939,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -933,6 +962,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_OPE_1 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_OPE_1_Container()
@@ -991,6 +1023,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -1013,6 +1046,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_OPE_2 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_OPE_2_Container()
@@ -1071,6 +1107,7 @@ namespace precalculate
 
         void store_all_value()
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
             {
                 for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -1093,6 +1130,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "F_OPE_3 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~F_OPE_3_Container()
@@ -1121,10 +1161,12 @@ namespace precalculate
     {
     private:
         std::complex<double> *****container;
+        unsigned long long int dimension;
 
     public:
         Ybra_Container()
         {
+            unsigned long long int count = 0;
             int L_num = (TWOJ + 3) / 2 + 1;
             container = new std::complex<double> ****[L_num];
             for (int idx_L = 0; idx_L < L_num; ++idx_L)
@@ -1134,7 +1176,7 @@ namespace precalculate
                 container[idx_L] = new std::complex<double> ***[mL_num];
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
+                    int l_num = j_MAX + 1; // consider the biggest value.
                     container[idx_L][idx_mL] = new std::complex<double> **[l_num];
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
@@ -1143,12 +1185,16 @@ namespace precalculate
                         container[idx_L][idx_mL][idx_l] = new std::complex<double> *[lam_num];
                         for (int idx_lam = 0; idx_lam < lam_num; ++idx_lam)
                         {
+                            count = count + 1;
                             container[idx_L][idx_mL][idx_l][idx_lam] = new std::complex<double>[right_angular_index - left_angular_index];
                         }
                     }
                 }
             }
+            dimension = count;
         }
+
+        unsigned long long int get_dim() { return dimension; }
 
         std::complex<double> get_value(int L, int mL, int l, int lam, int idx_angle)
         {
@@ -1161,6 +1207,7 @@ namespace precalculate
 
         void store_all_value(util::WignerSymbols &wigner)
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             int L_num = (TWOJ + 3) / 2 + 1;
             for (int idx_L = 0; idx_L < L_num; ++idx_L)
             {
@@ -1169,7 +1216,7 @@ namespace precalculate
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
                     int mL = idx_mL - L;
-                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
+                    int l_num = j_MAX + 1; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;
@@ -1191,6 +1238,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "Ybra function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~Ybra_Container()
@@ -1202,7 +1252,7 @@ namespace precalculate
                 int mL_num = 2 * L + 1;
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
+                    int l_num = j_MAX + 1; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;
@@ -1225,10 +1275,12 @@ namespace precalculate
     {
     private:
         std::complex<double> *****container;
+        unsigned long long int dimension;
 
     public:
         Yket_Container()
         {
+            unsigned long long int count = 0;
             int L_num = (TWOJ + 3) / 2 + 1;
             container = new std::complex<double> ****[L_num];
             for (int idx_L = 0; idx_L < L_num; ++idx_L)
@@ -1238,7 +1290,7 @@ namespace precalculate
                 container[idx_L] = new std::complex<double> ***[mL_num];
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
+                    int l_num = j_MAX + 1; // consider the biggest value.
                     container[idx_L][idx_mL] = new std::complex<double> **[l_num];
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
@@ -1247,12 +1299,16 @@ namespace precalculate
                         container[idx_L][idx_mL][idx_l] = new std::complex<double> *[lam_num];
                         for (int idx_lam = 0; idx_lam < lam_num; ++idx_lam)
                         {
+                            count = count + 1;
                             container[idx_L][idx_mL][idx_l][idx_lam] = new std::complex<double>[right_angular_index - left_angular_index];
                         }
                     }
                 }
             }
+            dimension = count;
         }
+
+        int get_dim() { return dimension; }
 
         std::complex<double> get_value(int L, int mL, int l, int lam, int idx_angle)
         {
@@ -1265,6 +1321,7 @@ namespace precalculate
 
         void store_all_value(util::WignerSymbols &wigner)
         {
+            auto time1 = std::chrono::high_resolution_clock::now();
             int L_num = (TWOJ + 3) / 2 + 1;
             for (int idx_L = 0; idx_L < L_num; ++idx_L)
             {
@@ -1273,7 +1330,7 @@ namespace precalculate
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
                     int mL = idx_mL - L;
-                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
+                    int l_num = j_MAX + 1; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;
@@ -1295,6 +1352,9 @@ namespace precalculate
                     }
                 }
             }
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            std::cout << "Yket function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
         }
 
         ~Yket_Container()
@@ -1306,7 +1366,7 @@ namespace precalculate
                 int mL_num = 2 * L + 1;
                 for (int idx_mL = 0; idx_mL < mL_num; ++idx_mL)
                 {
-                    int l_num = j_MAX + (TWOJ + 1) / 2 + 2; // consider the biggest value.
+                    int l_num = j_MAX + 1; // consider the biggest value.
                     for (int idx_l = 0; idx_l < l_num; ++idx_l)
                     {
                         int l = idx_l;

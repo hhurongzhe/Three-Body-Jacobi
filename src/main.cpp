@@ -197,6 +197,7 @@ std::vector<alpha_channel> setup_alpha_channels(int twoJ, int P, int twoT)
             }
         }
     }
+    std::cout << "Building alpha channels !" << std::endl;
     return alpha_channels;
 }
 
@@ -368,33 +369,15 @@ void write_headers()
               << std::endl;
 }
 
-int main()
+// estimate memory.
+void estimate_memory(int Nalpha, int dimension_Ybra, int dimension_Yket)
 {
-    std::cout << "running 3b-jacobi.exe..." << std::endl;
-    write_headers();
-
-    // set parallel threads in openpm.
-    omp_set_num_threads(NUM_THREADS);
-
-    auto time1 = std::chrono::high_resolution_clock::now();
-    auto alpha_channels = setup_alpha_channels(TWOJ, PARITY, TWOT);
-    auto time2 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    int Nalpha = alpha_channels.size();
-    std::cout << "Building alpha channels !    Timing : " << duration << " seconds" << std::endl;
-
-    time1 = std::chrono::high_resolution_clock::now();
-    util::WignerSymbols wigner;
-    wigner.reserve(200, "Jmax", 9);
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "\nReserve 9j symbols !    Timing : " << duration << " seconds" << std::endl;
-
-    unsigned long long int angle_dimensions = pow(Nmesh_angle, 5);
-    unsigned long long int momentum_dimensions = pow(Nmesh_mom_p, 2) * pow(Nmesh_mom_q, 2);
-    unsigned long long int tbme_dimensions = angle_dimensions * momentum_dimensions;
-    double precalculate_storage = 9 * tbme_dimensions * 8 / pow(1024, 3); // precalculate functions' minimal required storage (in GB).
-    std::cout << "\nBeginning precalculate functions......\n";
+    unsigned long long int angle_dimensions = Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle;
+    unsigned long long int momentum_dimensions = Nmesh_mom_p * Nmesh_mom_p * Nmesh_mom_q * Nmesh_mom_q;
+    unsigned long long int dimension_F = momentum_dimensions * angle_dimensions;               // there are 9 of them (double)
+    unsigned long long int dimension_Y = (dimension_Ybra + dimension_Yket) * angle_dimensions; // there is a pair of Y (complex double)
+    // precalculate functions' minimal required storage (in GB).
+    double precalculate_storage = (9 * dimension_F * 8 + dimension_Y * 16) / pow(1024, 3);
     std::cout << "Without scaling, angular index interval   : "
               << "[ 0 , " << angle_dimensions - 1 << " ]\n";
     std::cout << "After   scaling, angular index interval   : "
@@ -406,95 +389,65 @@ int main()
     std::cout << "After   scaling, minimal storage required : " << precalculate_storage * (right_angular_index - left_angular_index) / angle_dimensions << " GB\n"
               << std::endl;
 
-    precalculate::integration_weight_Container integration_weight_container;
-
-    precalculate::Ybra_Container Ybra_container;
-    precalculate::Yket_Container Yket_container;
-
-    precalculate::F_TPE1_12_Container F_TPE1_12_container;
-    precalculate::F_TPE1_13_Container F_TPE1_13_container;
-    precalculate::F_TPE1_23_Container F_TPE1_23_container;
-
-    precalculate::F_TPE2_12_Container F_TPE2_12_container;
-    precalculate::F_TPE2_13_Container F_TPE2_13_container;
-    precalculate::F_TPE2_23_Container F_TPE2_23_container;
-
-    precalculate::F_OPE_1_Container F_OPE_1_container;
-    precalculate::F_OPE_2_Container F_OPE_2_container;
-    precalculate::F_OPE_3_Container F_OPE_3_container;
-
-    time1 = std::chrono::high_resolution_clock::now();
-    integration_weight_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "5-dim angular integration weights calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-
-    time1 = std::chrono::high_resolution_clock::now();
-    F_TPE1_12_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_TPE1_12 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-    time1 = std::chrono::high_resolution_clock::now();
-    F_TPE1_13_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_TPE1_13 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-    time1 = std::chrono::high_resolution_clock::now();
-    F_TPE1_23_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_TPE1_23 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-
-    time1 = std::chrono::high_resolution_clock::now();
-    F_TPE2_12_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_TPE2_12 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-    time1 = std::chrono::high_resolution_clock::now();
-    F_TPE2_13_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_TPE2_13 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-    time1 = std::chrono::high_resolution_clock::now();
-    F_TPE2_23_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_TPE2_23 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-
-    time1 = std::chrono::high_resolution_clock::now();
-    F_OPE_1_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_OPE_1 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-    time1 = std::chrono::high_resolution_clock::now();
-    F_OPE_2_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_OPE_2 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-    time1 = std::chrono::high_resolution_clock::now();
-    F_OPE_3_container.store_all_value();
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "F_OPE_3 function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-
-    time1 = std::chrono::high_resolution_clock::now();
-    Ybra_container.store_all_value(wigner);
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "Ybra function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-    time1 = std::chrono::high_resolution_clock::now();
-    Yket_container.store_all_value(wigner);
-    time2 = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
-    std::cout << "Yket function calculated and stored!    Timing : " << duration << " seconds" << std::endl;
-
-    std::cout << "\nPrecalculation all done!\n\nBeginning calculating 3bmes......\n"
-              << std::endl;
-
     std::cout << "Calculating 3bmes in channel space     : J = " << TWOJ << "/2"
               << " , P = " << PARITY << " , T = " << TWOT << "/2" << std::endl;
     std::cout << "Basis dimension Nalpha in this channel : Nalpha = " << Nalpha << std::endl;
     std::cout << "Dimension of V3N in this channel       : dim(V3N) = " << Nalpha * Nalpha * momentum_dimensions << std::endl;
+}
+
+int main()
+{
+    std::cout << "running 3b-jacobi.exe..." << std::endl;
+    // write header.
+    write_headers();
+
+    // set parallel threads in openpm.
+    omp_set_num_threads(NUM_THREADS);
+
+    // build channels.
+    auto alpha_channels = setup_alpha_channels(TWOJ, PARITY, TWOT);
+    int Nalpha = alpha_channels.size();
+
+    // reserve wigner symbols.
+    util::WignerSymbols wigner;
+    wigner.reserve(200, "Jmax", 9);
+    std::cout << "\nReserve 9j symbols !" << std::endl;
+
+    // precalculate functions.
+    precalculate::integration_weight_Container integration_weight_container;
+    precalculate::F_TPE1_12_Container F_TPE1_12_container;
+    precalculate::F_TPE1_13_Container F_TPE1_13_container;
+    precalculate::F_TPE1_23_Container F_TPE1_23_container;
+    precalculate::F_TPE2_12_Container F_TPE2_12_container;
+    precalculate::F_TPE2_13_Container F_TPE2_13_container;
+    precalculate::F_TPE2_23_Container F_TPE2_23_container;
+    precalculate::F_OPE_1_Container F_OPE_1_container;
+    precalculate::F_OPE_2_Container F_OPE_2_container;
+    precalculate::F_OPE_3_Container F_OPE_3_container;
+    precalculate::Ybra_Container Ybra_container;
+    precalculate::Yket_Container Yket_container;
+
+    unsigned long long int dimension_Ybra = Ybra_container.get_dim();
+    unsigned long long int dimension_Yket = Yket_container.get_dim();
+    estimate_memory(Nalpha, dimension_Ybra, dimension_Yket);
+
+    std::cout << "\nBeginning precalculate functions......\n";
+    integration_weight_container.store_all_value();
+    F_TPE1_12_container.store_all_value();
+    F_TPE1_13_container.store_all_value();
+    F_TPE1_23_container.store_all_value();
+    F_TPE2_12_container.store_all_value();
+    F_TPE2_13_container.store_all_value();
+    F_TPE2_23_container.store_all_value();
+    F_OPE_1_container.store_all_value();
+    F_OPE_2_container.store_all_value();
+    F_OPE_3_container.store_all_value();
+    Ybra_container.store_all_value(wigner);
+    Yket_container.store_all_value(wigner);
+
+    std::cout << "\nPrecalculation all done!\n\nBeginning calculating 3bmes......\n\n";
+
+    // calculating 3bme in all channels.
     int dummy = 1;
     for (int idxbra = 0; idxbra < Nalpha; idxbra = idxbra + 1)
     {
@@ -502,7 +455,7 @@ int main()
         {
             auto chanel_bra = alpha_channels[idxbra];
             auto chanel_ket = alpha_channels[idxket];
-            time1 = std::chrono::high_resolution_clock::now();
+            auto time1 = std::chrono::high_resolution_clock::now();
             cal_3bme_alpha_channel(chanel_bra, chanel_ket,
                                    integration_weight_container,
                                    Ybra_container, Yket_container,
@@ -511,8 +464,8 @@ int main()
                                    F_TPE2_12_container, F_TPE2_13_container, F_TPE2_23_container,
                                    F_OPE_1_container, F_OPE_2_container, F_OPE_3_container,
                                    wigner);
-            time2 = std::chrono::high_resolution_clock::now();
-            duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
+            auto time2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(time2 - time1).count();
             std::cout << dummy << "/" << Nalpha * Nalpha << "    Timing : " << duration << " seconds" << std::endl;
             dummy = dummy + 1;
         }

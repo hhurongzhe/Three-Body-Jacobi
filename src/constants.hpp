@@ -24,7 +24,7 @@ namespace constants
     constexpr int TWOJ = 1;
     constexpr int PARITY = 1;
     constexpr int TWOT = 1;
-    constexpr int j_MAX = 5; // max total momentum of the unpaired nucleon.
+    constexpr int j_MAX = 5; // max total momentum of the paired nucleon(12).
 
     // interval of 5-dim angular index, used for effective reduction of memory.
     // you should combine all results to get the final right result.
