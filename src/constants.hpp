@@ -31,6 +31,11 @@ namespace constants
     constexpr unsigned long long int left_angular_index = 0;      // TODO: check if smaller than right and if positive.
     constexpr unsigned long long int right_angular_index = 10000; // TODO: check if smaller than biggest possible value.
 
+    // result file name.
+    const std::string FILE_PREFIX = "./data/test_2J_" + std::to_string(TWOJ) + "_P_" + std::to_string(PARITY) + "_2T_" + std::to_string(TWOT) + "_index_" + std::to_string(left_angular_index) + "_" + std::to_string(right_angular_index);
+    const std::string FILE_SUFFIX = ".dat";
+    const std::string FILE_NAME = FILE_PREFIX + FILE_SUFFIX;
+
     // Constants.
     constexpr double gA = 1.29;
     constexpr double fpi = 92.4;

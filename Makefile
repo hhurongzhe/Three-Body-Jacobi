@@ -1,7 +1,5 @@
-# Makefile for C++ program with OpenMP support
-
 # Compiler
-CXX = mpic++ -O3   # Use the appropriate version of g++ (replace with your desired compiler)
+CXX = mpic++ -O3   # (replace with your desired compiler)
 
 # Compiler flags
 CXXFLAGS = -std=c++17 -fopenmp

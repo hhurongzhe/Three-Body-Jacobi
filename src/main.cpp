@@ -1,9 +1,12 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <tuple>
 #include <omp.h>
 #include <vector>
 #include <chrono>
 #include <cmath>
+#include <iomanip>
 
 #include "constants.hpp"
 #include "aPWD3.hpp"
@@ -198,7 +201,6 @@ std::vector<alpha_channel> setup_alpha_channels(int twoJ, int P, int twoT)
 }
 
 // calculate 3bme in specific alpha channel, for all momentum mesh points.
-// TODO: store these 3bmes.
 void cal_3bme_alpha_channel(alpha_channel chanel_bra, alpha_channel chanel_ket,
                             precalculate::integration_weight_Container &integration_weight_container,
                             precalculate::Ybra_Container &Ybra_container, precalculate::Yket_Container &Yket_container,
@@ -207,9 +209,16 @@ void cal_3bme_alpha_channel(alpha_channel chanel_bra, alpha_channel chanel_ket,
                             precalculate::F_OPE_1_Container &F_OPE_1_container, precalculate::F_OPE_2_Container &F_OPE_2_container, precalculate::F_OPE_3_Container &F_OPE_3_container,
                             util::WignerSymbols &wigner)
 {
-    bool check_J = chanel_bra.twoJ == chanel_ket.twoJ;
-    bool check_P = chanel_bra.P == chanel_ket.P;
-    bool check_T = chanel_bra.twoT == chanel_ket.twoT;
+    std::ofstream fp(FILE_NAME, std::ios::app); // append mode.
+    if (!fp.is_open())
+    {
+        std::cerr << "failed to open file: " << FILE_NAME << '\n';
+        std::exit(-1);
+    }
+    fp << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+    bool check_J = (chanel_bra.twoJ == chanel_ket.twoJ);
+    bool check_P = (chanel_bra.P == chanel_ket.P);
+    bool check_T = (chanel_bra.twoT == chanel_ket.twoT);
     if (check_J && check_P && check_T)
     {
         int lp = chanel_bra.l;
@@ -230,6 +239,8 @@ void cal_3bme_alpha_channel(alpha_channel chanel_bra, alpha_channel chanel_ket,
 
         int twoJ = chanel_bra.twoJ;
 
+        fp << "# (l',s',j',lambda',2j1',t',l,s,j,lambda,2j1,t,2J,P,2T) = (" << lp << "," << sp << "," << jp << "," << lamp << "," << twoj1p << "," << tp << "," << l << "," << s << "," << j << "," << lam << "," << twoj1 << "," << t << "," << twoJ << "," << PARITY << "," << twoT << ")" << std::endl;
+        fp << "##" << std::endl;
         for (int idxp = 0; idxp < Nmesh_mom_p; idxp = idxp + 1)
         {
             for (int idxq = 0; idxq < Nmesh_mom_q; idxq = idxq + 1)
@@ -245,6 +256,13 @@ void cal_3bme_alpha_channel(alpha_channel chanel_bra, alpha_channel chanel_ket,
                                        F_TPE2_12_container, F_TPE2_13_container, F_TPE2_23_container,
                                        F_OPE_1_container, F_OPE_2_container, F_OPE_3_container,
                                        wigner);
+                        const double unit_factor = pow(hbarc, 5);
+                        double mtx_with_unit = mtx * unit_factor;
+                        if (std::abs(mtx_with_unit) > 1e-16)
+                        {
+                            fp << "(p',q',p,q) = (" << idxpp << "," << idxqp << "," << idxp << "," << idxq << ")    ";
+                            fp << "mtx: " << std::scientific << std::setprecision(17) << mtx_with_unit << std::endl;
+                        }
                         // if (std::abs(mtx * pow(hbarc, 5)) > 1e-16)
                         // {
                         //     std::cout << "(p',q',p,q) = (" << idxpp << "," << idxqp << "," << idxp << "," << idxq << ")    ";
@@ -261,10 +279,100 @@ void cal_3bme_alpha_channel(alpha_channel chanel_bra, alpha_channel chanel_ket,
     {
         std::cout << "quantum number violation between alpha channels.    check_J : " << check_J << "    check_P : " << check_P << "    check_T : " << check_T << std::endl;
     }
+    fp << "##" << std::endl;
+    fp << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+    fp.close();
+}
+
+// writting header into the file, including all parameters.
+void write_headers()
+{
+    std::ofstream fp(FILE_NAME);
+    if (!fp.is_open())
+    {
+        std::cerr << "failed to open file: " << FILE_NAME << '\n';
+        std::exit(-1);
+    }
+
+    fp << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << std::endl;
+    fp << "! Three-Body-Jacobi: C++ code to calculate matrix elements of chiral 3N interactions in Jacobi momentum space" << std::endl;
+
+    auto now = std::chrono::system_clock::now();
+    auto now_c = std::chrono::system_clock::to_time_t(now);
+    char dateStr[100];
+    std::strftime(dateStr, sizeof(dateStr), "%Y-%m-%d", std::localtime(&now_c));
+    fp << "\n! Current Date: " << dateStr << std::endl;
+
+    // Write constants to the file
+    fp << "\n! 3N LECs:" << std::endl;
+    fp << "# c1 (MeV^(-1)): " << c1 << std::endl;
+    fp << "# c3 (MeV^(-1)): " << c3 << std::endl;
+    fp << "# c4 (MeV^(-1)): " << c4 << std::endl;
+    fp << "# cD (dimensionless): " << cD << std::endl;
+    fp << "# cE (dimensionless): " << cE << std::endl;
+    fp << "# regulator_power: " << regulator_power << std::endl;
+    fp << "# Lambda (MeV): " << Lambda << std::endl;
+    fp << "# LambdaX (MeV): " << LambdaX << std::endl;
+
+    fp << "\n! Partial-Wave Channel and Cuts:" << std::endl;
+    fp << "# TWOJ: " << TWOJ << std::endl;
+    fp << "# PARITY: " << PARITY << std::endl;
+    fp << "# TWOT: " << TWOT << std::endl;
+    fp << "# j_MAX: " << j_MAX << std::endl;
+
+    fp << "\n! 5-Dim Angular Index Interval:" << std::endl;
+    fp << "# full left_angular_index: " << 0 << std::endl;
+    fp << "# full right_angular_index: " << Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle - 1 << std::endl;
+    fp << "# scaling left_angular_index: " << left_angular_index << std::endl;
+    fp << "# scaling right_angular_index: " << right_angular_index << std::endl;
+
+    fp << "\n! Constants:" << std::endl;
+    fp << "# gA: " << gA << std::endl;
+    fp << "# fpi: " << fpi << std::endl;
+    fp << "# Mpi: " << Mpi << std::endl;
+    fp << "# hbarc: " << hbarc << std::endl;
+    fp << "# PI: " << PI << std::endl;
+    fp << "# NUM_THREADS: " << NUM_THREADS << std::endl;
+
+    fp << "\n! mesh_theta, weight_theta, mesh_phi, weight_phi:" << std::endl;
+    fp << "# Nmesh_angle: " << Nmesh_angle << std::endl;
+    fp << "##" << std::endl;
+    for (int i = 0; i < Nmesh_angle; ++i)
+    {
+        fp << std::fixed << "\t" << std::scientific << std::setprecision(17) << mesh_theta[i] << "\t" << std::setw(17) << weight_theta[i] << "\t" << std::setw(17) << mesh_phi[i] << "\t" << std::setw(17) << weight_phi[i] << std::endl;
+    }
+    fp << "##" << std::endl;
+
+    fp << "\n! mesh_mom_p, weight_mom_p:" << std::endl;
+    fp << "# Nmesh_mom_p: " << Nmesh_mom_p << std::endl;
+    fp << "##" << std::endl;
+    for (int i = 0; i < Nmesh_mom_p; ++i)
+    {
+        fp << std::fixed << "\t" << std::scientific << std::setprecision(17) << mesh_mom_p[i] << "\t" << std::setw(17) << weight_mom_p[i] << std::endl;
+    }
+    fp << "##" << std::endl;
+
+    fp << "\n! mesh_mom_q, weight_mom_q:" << std::endl;
+    fp << "# Nmesh_mom_q: " << Nmesh_mom_q << std::endl;
+    fp << "##" << std::endl;
+    for (int i = 0; i < Nmesh_mom_q; ++i)
+    {
+        fp << std::fixed << "\t" << std::scientific << std::setprecision(17) << mesh_mom_q[i] << "\t" << std::setw(17) << weight_mom_q[i] << std::endl;
+    }
+    fp << "##" << std::endl;
+
+    fp << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"
+       << std::endl;
+    fp.close();
+    std::cout << "\nWriting header complete !\n"
+              << std::endl;
 }
 
 int main()
 {
+    std::cout << "running 3b-jacobi.exe..." << std::endl;
+    write_headers();
+
     // set parallel threads in openpm.
     omp_set_num_threads(NUM_THREADS);
 

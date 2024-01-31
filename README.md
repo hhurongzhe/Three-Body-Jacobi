@@ -2,26 +2,23 @@
 
 Calculating matrix elements of chiral 3N interactions under JJ-coupled three-body partial-wave basis ( in Jacobi coordinates ), written in C++.
 
-## Getting Started(to be updated)
-...
 
-## Requirements
 
-This code requires "openmp" only.
+### Requirements
 
-A C++ compiler with a Makefile would be enough.
+A C++ compiler with a makefile would be enough.
 
-However, I use "Xmake", which is a lightweight and fast building utility based on lua.
+However, I use Xmake, which is a lightweight and fast building utility based on lua.
 
 
 
-## Method(to be updated)
+### Method
 
-To do partial-wave projection for 3N interactions, we follow the "aPWD" method developed by J. Golak ( see "A new way to perform partial wave decompositions of few-nucleon forces" ). 
+To do partial-wave projection for 3N interactions, we follow the "aPWD" method developed by J. Golak ( see "A new way to perform partial wave decompositions of few-nucleon forces" ). Unlike the description in the original paper, we perform partial-wave decomposition under JJ-coupled 3N states directly ( usually denoted by $\ket{\alpha}$ ). But the formalism is almost the same.
 
 
 
-## Structure of Code(to be updated)
+### Structure of Code
 
 - src/constants.hpp: definitions of LECs, mesh points and other things. You may need to change these for your use.
 - src/precalculate.hpp: some functions and structures used to precalculate and store in the beginning of calculation. This is necessary for speeding up the code.
@@ -33,10 +30,9 @@ To do partial-wave projection for 3N interactions, we follow the "aPWD" method d
 
 
 
-## Remarks
+### Remarks
 
 This code is mainly designed for generating non-locally regulated 3N interaction in the Jacobi coordinate (up to N2LO). However, it is possible to extend for local 3N interaction or for N3LO terms.
 
 If you have any needs or questions, just contact me: rongzhe_hu@pku.edu.cn
-
 
