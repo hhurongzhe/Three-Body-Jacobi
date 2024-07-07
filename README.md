@@ -8,6 +8,14 @@ Calculating matrix elements of chiral 3N interactions under LS-coupled three-bod
 - A C++ compiler with a makefile would be enough. So I provide an exmaple in “Makefile”.
 - However, I use Xmake personally, which is a lightweight and fast building utility based on lua. See “xmake.lua”.
 
+### Usage
+
+- use Mathematica notebooks to generate codes in ./deps-mma
+- copy the generated .out files into src/aPWD3_part_*.cpp
+- set N_channels in src/main_part_*.cpp
+- compile and run
+- save channel information and (2J,P,2T) in a txt file
+
 ### Method
 
 To do partial-wave projection for 3N interactions, I follow the "aPWD" method developed by J. Golak. See "A new way to perform partial wave decompositions of few-nucleon forces" if interested.
