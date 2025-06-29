@@ -1,0 +1,11 @@
+# build dir
+build/
+
+# output dir
+output/
+
+# others
+.vscode/
+.DS_Store
+*.png
+*.jpg
