@@ -48,8 +48,7 @@ void store_angle_mesh_weights()
             w = weight_theta[idx_theta_q] * weight_theta[idx_theta_pp] * weight_theta[idx_theta_qp] * weight_phi[idx_phi_pp] * weight_phi[idx_phi_qp] * sin_theta_q * sin_theta_pp * sin_theta_qp * 8 * PI * PI;
             fp.write(reinterpret_cast<const char *>(&w), sizeof(double));
         }
-        std::cout << "angular mesh weights stored in: " << file_name << "\n"
-                  << std::endl;
+        std::cout << "angular mesh weights stored in: " << file_name << "\n" << std::endl;
     }
     else
     {
@@ -127,8 +126,7 @@ void store_mesh()
             double q_value = constants::mesh_mom_q[idxq];
             fp_q.write(reinterpret_cast<const char *>(&q_value), sizeof(double));
         }
-        std::cout << "q momentum mesh stored in: " << file_name_q << "\n"
-                  << std::endl;
+        std::cout << "q momentum mesh stored in: " << file_name_q << "\n" << std::endl;
     }
     else
     {
@@ -147,30 +145,25 @@ int main()
     auto now_c = std::chrono::system_clock::to_time_t(now);
     char dateStr[100];
     std::strftime(dateStr, sizeof(dateStr), "%Y-%m-%d", std::localtime(&now_c));
-    std::cout << "---- Current Date: " << dateStr << "\n"
-              << std::endl;
+    std::cout << "---- Current Date: " << dateStr << "\n" << std::endl;
 
-    std::cout << "---- you are calculating for part c1 !\n"
-              << std::endl;
+    std::cout << "---- you are calculating for part c1 !\n" << std::endl;
 
     //---- estimate memory.
     double memory_min_each = constants::Nmesh_mom_p * constants::Nmesh_mom_p * constants::Nmesh_mom_q * constants::Nmesh_mom_q * 8. / 1024. / 1024.;
     double memory_min_all = N_channels * N_channels * memory_min_each;
     std::cout << "---- each file  size: " << memory_min_each << " MB" << std::endl;
-    std::cout << "---- all  files size: " << memory_min_all << " MB\n"
-              << std::endl;
+    std::cout << "---- all  files size: " << memory_min_all << " MB\n" << std::endl;
 
     //---- set parallel threads in openpm.
     const int thread_number = omp_get_num_procs();
-    std::cout << "---- number of threads for openmp: " << thread_number << "\n"
-              << std::endl;
+    std::cout << "---- number of threads for openmp: " << thread_number << "\n" << std::endl;
     omp_set_num_threads(thread_number);
 
     //---- reserve wigner symbols.
     util::WignerSymbols wigner;
     wigner.reserve(200, "Jmax", 6);
-    std::cout << "---- reserve wigner symbols !\n"
-              << std::endl;
+    std::cout << "---- reserve wigner symbols !\n" << std::endl;
 
     //---- store momentum mesh.
     store_mesh();
@@ -238,8 +231,7 @@ int main()
             }
             auto time_part2 = std::chrono::high_resolution_clock::now();
             auto duration_part = std::chrono::duration_cast<std::chrono::seconds>(time_part2 - time_part1).count();
-            std::cout << "---- This Channel Timing (actual)   : " << duration_part << " seconds\n"
-                      << std::endl;
+            std::cout << "---- This Channel Timing (actual)   : " << duration_part << " seconds\n" << std::endl;
         }
     }
     auto time2 = std::chrono::high_resolution_clock::now();

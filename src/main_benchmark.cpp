@@ -52,8 +52,7 @@ void store_angle_mesh_weights()
             w = weight_theta[idx_theta_q] * weight_theta[idx_theta_pp] * weight_theta[idx_theta_qp] * weight_phi[idx_phi_pp] * weight_phi[idx_phi_qp] * sin_theta_q * sin_theta_pp * sin_theta_qp * 8 * PI * PI;
             fp.write(reinterpret_cast<const char *>(&w), sizeof(double));
         }
-        std::cout << "angular mesh weights stored in: " << file_name << "\n"
-                  << std::endl;
+        std::cout << "angular mesh weights stored in: " << file_name << "\n" << std::endl;
     }
     else
     {
