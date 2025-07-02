@@ -13,7 +13,7 @@
 using namespace constants;
 
 constexpr int N_channels = 16;  // number of total beta-channels to calculate.
-constexpr bool verbose = false; // if print detailed information.
+constexpr bool verbose = true; // if print detailed information.
 
 constexpr int angle_dimension_total = Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle;
 constexpr int angle_dimension_4 = Nmesh_angle * Nmesh_angle * Nmesh_angle * Nmesh_angle;
