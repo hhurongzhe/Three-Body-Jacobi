@@ -31,6 +31,12 @@ We specially thank Professor Kacper Topolnicki for discussions.
 - script/*.sh: scripts to submit the job on supercomputer.
 - docs/Theory.md: details of the aPWD theory.
 
+### Citation
+
+If you benifite from this code during research, please cite as:
+
+- Rongzhe Hu. Three-Body-Jacobi: A code for calculating chiral 3NF matrix element in Jacobi coordinates. [https://github.com/hhurongzhe/Three-Body-Jacobi]
+
 ### Remarks
 
 This code is mainly designed for generating non-locally regulated 3N interaction in the Jacobi coordinate (up to N2LO). However, it is possible to extend for local 3N interaction or for N3LO terms.
