@@ -6,7 +6,6 @@ Calculating matrix elements of chiral 3N interactions under LS-coupled three-bod
 
 - This code requires openmp only.
 - A C++ compiler with a makefile would be enough. So I provide an exmaple in “Makefile”.
-- However, I use Xmake personally, which is a lightweight and fast building utility based on lua. See “xmake.lua”.
 
 ### Usage
 

@@ -1,5 +1,5 @@
 CXX = g++-15
-CXXFLAGS = -O3 -std=c++17 -fopenmp -W -Wall
+CXXFLAGS = -O3 -std=c++17 -fopenmp
 
 SRC_DIR = src
 NUM_LIB = $(SRC_DIR)/numlib/*.cpp

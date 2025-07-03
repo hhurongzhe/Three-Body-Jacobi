@@ -7,10 +7,8 @@
 
 namespace aPWD3_cE
 {
-    // spin projection of 3N forces.
-    std::complex<double> Gt(int idxbra, int idxket, double ppmag, double qpmag, double pmag, double qmag,
-                            double thetaq, double thetapp, double phipp, double thetaqp, double phiqp,
-                            util::WignerSymbols &wigner);
+// spin projection of 3N forces.
+std::complex<double> Gt(int idxbra, int idxket, double ppmag, double qpmag, double pmag, double qmag, double thetaq, double thetapp, double phipp, double thetaqp, double phiqp, util::WignerSymbols &wigner);
 } // end namespace aPWD3_cE
 
 #endif // aPWD3_cE_HPP

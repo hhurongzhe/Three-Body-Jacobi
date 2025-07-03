@@ -14,20 +14,13 @@ def gen_pw_channels(twoJ, P, twoT, lmax, lammax):
             for L in range(Lmin, Lmax + 1, 1):
                 for l in range(0, lmax + 1, 1):
                     for lam in range(0, lammax + 1, 1):
-                        if (
-                            abs(l - lam) <= L
-                            and (l + lam) >= L
-                            and L <= abs(l + lam)
-                            and P * (-1) ** (l + lam) > 0
-                        ):
+                        if abs(l - lam) <= L and (l + lam) >= L and L <= abs(l + lam) and P * (-1) ** (l + lam) > 0:
                             if (l + s) % 2 == 0:
                                 t = 1
                             else:
                                 t = 0
                             if not (t == 0 and twoT == 3):
-                                pw_channels.append(
-                                    [l, lam, L, s, twoS, t, twoT, twoJ, P]
-                                )
+                                pw_channels.append([l, lam, L, s, twoS, t, twoT, twoJ, P])
     pw_channels_sorted = sorted(pw_channels, key=lambda x: x[0])
     return pw_channels_sorted
 
@@ -36,26 +29,8 @@ def print_for_mma(pw_channels):
     print("{l,lam,L,s,2S,t,2T,2J}")
     for idx_chan, chan in enumerate(pw_channels):
         [l, lam, L, s, twoS, t, twoT, twoJ, P] = chan
-        chan_str = (
-            "{"
-            + str(l)
-            + ","
-            + str(lam)
-            + ","
-            + str(L)
-            + ","
-            + str(s)
-            + ","
-            + str(twoS)
-            + ","
-            + str(t)
-            + ","
-            + str(twoT)
-            + ","
-            + str(twoJ)
-            + "},"
-        )
-        print(chan_str)
+        chan_str = "{" + str(l) + "," + str(lam) + "," + str(L) + "," + str(s) + "," + str(twoS) + "," + str(t) + "," + str(twoT) + "," + str(twoJ) + "},"
+        print(idx_chan + 1, chan_str)
     print(len(pw_channels))
 
 

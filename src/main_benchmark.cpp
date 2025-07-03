@@ -116,8 +116,8 @@ int main()
     double pmag = 1.0 * constants::hbarc;
     double qmag = 2.0 * constants::hbarc;
 
-    std::vector<std::vector<int>> idx_braket = {{1, 1}, {2, 1}, {6, 11}, {5, 10}};
-    std::vector<double> test_values = {443.618, 1200.219, -5.49290, -5.48626};
+    std::vector<std::vector<int>> idx_braket = {{1, 1}, {2, 1}, {6, 11}, {5, 10}, {3, 3}, {4, 4}, {5, 5}, {14, 2}, {16, 2}, {14, 3}, {16, 3}, {16, 16}};
+    std::vector<double> test_values = {443.61812482743625, 1200.2230011816816, -5.493112671093984, -5.48526849007587, -18.18325771025193, -16.176318668506468, 114.96009628475589, 3.0289964509865403 * 1.e-15, -142.91226550774832, 20.571413496511507, 59.63628381023212, -0.15493984959165086};
 
     for (int idx_channel = 0; idx_channel < idx_braket.size(); idx_channel = idx_channel + 1)
     {
@@ -127,6 +127,6 @@ int main()
         double mtx = G(idx_bra, idx_ket, ppmag, qpmag, pmag, qmag, angular_mesh_weights, wigner);
         const double unit_factor = pow(hbarc, 5);
         double mtx_with_unit = mtx * unit_factor;
-        std::cout << "G(" << idx_bra << "," << idx_ket << ")  calculate: " << mtx_with_unit << "    standard: " << test_values[idx_channel] << "\n";
+        std::cout << "G(" << idx_bra << "," << idx_ket << ")  calculate: " << mtx_with_unit << "    reference: " << test_values[idx_channel] << "\n";
     }
 }
