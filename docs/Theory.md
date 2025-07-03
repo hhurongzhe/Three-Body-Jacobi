@@ -53,7 +53,8 @@ in Mathematica, th spin-coupled 3N states are constructed to be vectors of lengt
 
 ```mathematica
 spin1N[m_] := Switch[m, 1/2, {1, 0}, -1/2, {0, 1}, _, {0, 0}];
-spin3N[s_, S_, MS_] := 
+spin3N[s_, S_, MS_] := Sum[CG[s, 1/2, S, MS - m1, m1, MS]* CG[1/2, 1/2, s, m2, MS - m1 - m2, MS - m1]* ArrayFlatten[
+ KroneckerProduct[spin1N[m2], spin1N[MS - m1 - m2], spin1N[m1]], 1], {m1, -1/2, 1/2}, {m2, -1/2, 1/2}];
 ```
 
 ## chiral 3NF at N2LO
@@ -153,8 +154,8 @@ V_{c_3} =F_{\text{TPE2}}(\boldsymbol{\sigma}_2\cdot \boldsymbol{q}_2) \;(\boldsy
 $$
 
 $$
-V_{c_4} =F_{\text{TPE3}}(-i)\,\boldsymbol{\sigma}_1\cdot (\boldsymbol{q}_2\times \boldsymbol{q}_3)\;(\boldsymbol{\sigma}_2\cdot \boldsymbol{q}_2) \;(\boldsymbol{\sigma}_3\cdot \boldsymbol{q}_3)
-\;i\boldsymbol{\tau}_1\cdot (\boldsymbol{\tau}_2\times \boldsymbol{\tau}_3)
+V_{c_4} =F_{\text{TPE3}}\,\boldsymbol{\sigma}_1\cdot (\boldsymbol{q}_2\times \boldsymbol{q}_3)\;(\boldsymbol{\sigma}_2\cdot \boldsymbol{q}_2) \;(\boldsymbol{\sigma}_3\cdot \boldsymbol{q}_3)
+\;\boldsymbol{\tau}_1\cdot (\boldsymbol{\tau}_2\times \boldsymbol{\tau}_3)
 $$
 
 $$
@@ -204,7 +205,7 @@ Sigmam = {Sigma1m, Sigma2m, Sigma3m};
 q1 = {q1x, q1y, q1z};
 q2 = {q2x, q2y, q2z};
 q3 = {q3x, q3y, q3z};
-Vtpe1 = Ftpe1*KroneckerProduct[q2.Sigmam, q3.Sigmam, Um];
+Vtpe1 = Ftpe1* KroneckerProduct[q2.Sigmam, q3.Sigmam, Um];
 ```
 
 ## LS scheme
@@ -291,7 +292,7 @@ $$
 which is calculated analytically in Mathematica:
 
 ```mathematica
-Gt[lp_, lamp_, Lp_, sp_, twoSp_, l_, lam_, L_, s_, twoS_, twoJ_] :=
+Gt[lp_, lamp_, Lp_, sp_, twoSp_, l_, lam_, L_, s_, twoS_, twoJ_] := 1/(twoJ + 1)* ParallelSum[(CG[Lp, twoSp/2, twoJ/2, mLp, twoMJ/2 - mLp, twoMJ/2]* CG[L, twoS/2, twoJ/2, mL, twoMJ/2 - mL, twoMJ/2])* Ybra[Lp, mLp, lp, lamp, thetapp, phipp, thetaqp, phiqp, wigner]* Yket[L, mL, l, lam, thetaq, wigner]* (spin3N[sp, twoSp/2, twoMJ/2 - mLp].V.spin3N[s, twoS/2, twoMJ/2 - mL]), {twoMJ, -twoJ, twoJ, 2}, {mLp, -Lp, Lp}, {mL, -L, L}];
 ```
 
 the isospin matrix elements can be calculated easily. There are two isospin operators:
@@ -300,7 +301,7 @@ $$
 $$
 
 $$
-\hat{I}_2=i\boldsymbol{\tau}_1\cdot (\boldsymbol{\tau}_2\times \boldsymbol{\tau}_3)
+\hat{I}_2=\boldsymbol{\tau}_1\cdot (\boldsymbol{\tau}_2\times \boldsymbol{\tau}_3)
 $$
 
 which can be easily checked using Mathematica:
@@ -309,7 +310,7 @@ I_1(t',t,T)=(2t(t+1)-3)\,\delta_{t,t'}
 $$
 
 $$
-I_2(t',t,T)=2\sqrt{3}(-1)^{t}\,\delta_{t+t',1}\delta_{T,1/2}
+I_2(t',t,T)=2\sqrt{3}i(-1)^{t}\,\delta_{t+t',1}\delta_{T,1/2}
 $$
 
 the final 3NF matrix elements in LS scheme:
@@ -327,7 +328,7 @@ $$
 
 so that:
 $$
-G(\beta',\beta)=8\pi^2 \int \sin \theta_\hat{q} \sin \theta_{\hat{p}'} \sin \theta_{\hat{q}'} d\theta_\hat{q} d\theta_{\hat{p}'} d\theta_{\hat{q}'} d\phi_{\hat{p}'} d\phi_{\hat{q}'} \;\tilde{G}(\beta',\beta)
+G(\beta',\beta)=8\pi^2 \int \sin \theta_{\hat{q}} \sin \theta_{\hat{p}'} \sin \theta_{\hat{q}'} d\theta_{\hat{q}} d\theta_{\hat{p}'} d\theta_{\hat{q}'} d\phi_{\hat{p}'} d\phi_{\hat{q}'} \;\tilde{G}(\beta',\beta)
 $$
 
 ## JJ scheme
