@@ -6,13 +6,9 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=64
 
-export OMP_NUM_THREADS=48
-export OMP_STACKSIZE=1g
 ulimit -s unlimited
+export OMP_NUM_THREADS=128
+export OMP_STACKSIZE=1g
 
-
-part="cE"
-
-./build/linux/x86_64/release/apwd3-$part.x  >  output/log-xmake-$part.out
-
-
+part="c1"
+./build/apwd3-$part.x  >  output/log-apwd3-$part.txt

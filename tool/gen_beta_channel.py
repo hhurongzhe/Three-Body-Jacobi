@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def gen_pw_channels(twoJ, P, twoT, lmax, lammax):
+def gen_beta_pw_channels(twoJ, P, twoT, lmax, lammax):
     pw_channels = []
     for twoS in [1, 3]:
         if twoS == 1:
@@ -34,12 +34,22 @@ def print_for_mma(pw_channels):
     print(len(pw_channels))
 
 
+def save_beta_channel_info(pw_channels, filename):
+    with open(filename, "w") as f:
+        f.write("index l lam L s 2S t 2T 2J\n")
+        for idx_chan, chan in enumerate(pw_channels):
+            [l, lam, L, s, twoS, t, twoT, twoJ, P] = chan
+            f.write(f"{idx_chan+1} {l} {lam} {L} {s} {twoS} {t} {twoT} {twoJ}\n")
+    print(f"Channel information saved to {filename}")
+
+
 def main():
     [twoJ, P, twoT] = [1, 1, 1]
-    # [twoJ, P, twoT] = [7, 1, 1]
     [lmax, lammax] = [int((twoJ + 3) / 2), int((twoJ + 3) / 2)]
-    pw_channels = gen_pw_channels(twoJ, P, twoT, lmax, lammax)
+    pw_channels = gen_beta_pw_channels(twoJ, P, twoT, lmax, lammax)
     print_for_mma(pw_channels)
+    channel_file = f"data/channel_beta_info_twoJ{twoJ}_P{P}_twoT{twoT}.txt"
+    save_beta_channel_info(pw_channels, channel_file)
 
 
 if __name__ == "__main__":

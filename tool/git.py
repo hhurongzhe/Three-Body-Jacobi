@@ -1,7 +1,7 @@
 import subprocess
 
 # * This script is used to commit changes to a git repository.
-message = "update readme"
+message = "format_beta_to_alpha.py: recouple from LS to JJ scheme"
 
 
 command1 = "git add ."
