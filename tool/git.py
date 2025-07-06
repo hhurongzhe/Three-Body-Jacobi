@@ -1,7 +1,7 @@
 import subprocess
 
 # * This script is used to commit changes to a git repository.
-message = "update docs"
+message = "add aPWD3_momentum.nb for generating momentum functions used in C++ codes"
 
 
 command1 = "git add ."
