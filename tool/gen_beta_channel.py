@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def gen_beta_pw_channels(twoJ, P, twoT, lmax, lammax):
     pw_channels = []
     for twoS in [1, 3]:

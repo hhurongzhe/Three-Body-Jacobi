@@ -1,6 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
+
 
 hbarc = 197.32698
 
@@ -69,21 +68,11 @@ for idxp in range(number_pmesh):
                 pp = mom_mesh_p[idxpp]
                 qp = mom_mesh_q[idxqp]
                 regulator_ppqp = freg(pp, qp)
-                mtx_vc1_reg[idxp, idxq, idxpp, idxqp] = (
-                    mtx_c1[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
-                )
-                mtx_vc3_reg[idxp, idxq, idxpp, idxqp] = (
-                    mtx_c3[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
-                )
-                mtx_vc4_reg[idxp, idxq, idxpp, idxqp] = (
-                    mtx_c4[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
-                )
-                mtx_vcD_reg[idxp, idxq, idxpp, idxqp] = (
-                    mtx_cD[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
-                )
-                mtx_vcE_reg[idxp, idxq, idxpp, idxqp] = (
-                    mtx_cE[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
-                )
+                mtx_vc1_reg[idxp, idxq, idxpp, idxqp] = mtx_c1[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
+                mtx_vc3_reg[idxp, idxq, idxpp, idxqp] = mtx_c3[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
+                mtx_vc4_reg[idxp, idxq, idxpp, idxqp] = mtx_c4[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
+                mtx_vcD_reg[idxp, idxq, idxpp, idxqp] = mtx_cD[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
+                mtx_vcE_reg[idxp, idxq, idxpp, idxqp] = mtx_cE[idxp, idxq, idxpp, idxqp] * regulator_pq * regulator_ppqp
 
 np.save("v-tpe.npy", mtx_vc1_reg + mtx_vc3_reg + mtx_vc4_reg)
 np.save("v-ope.npy", mtx_vcD_reg)
