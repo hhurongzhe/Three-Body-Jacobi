@@ -4,6 +4,8 @@ import WignerSymbol as ws
 import time
 import functools
 from functools import lru_cache
+import h5py
+import os
 
 
 hbarc = 197.32698
@@ -83,8 +85,7 @@ def save_alpha_channel_info(pw_channels, filename):
 
 @lru_cache(maxsize=None)
 def hat(j):
-    two_j = int(2 * j)
-    return np.sqrt(two_j + 1)
+    return np.sqrt(2 * j + 1)
 
 
 @lru_cache(maxsize=None)
@@ -102,21 +103,69 @@ def f9j(j1, j2, j3, j4, j5, j6, j7, j8, j9):
     return result
 
 
-# mesh number
-number_pmesh = 16
-number_qmesh = 16
-shape = (number_pmesh, number_qmesh, number_pmesh, number_qmesh)
+def save_as_hdf5(alpha_channels, twoJ, P, twoT, part, nmesh, p_mesh, q_mesh, hdf5_file):
+    output_dir = f"input_3n_files/T3_{twoT}/J3_{twoJ}/PAR_{P}"
+    os.makedirs(output_dir, exist_ok=True)
 
-# JJ-scheme parameters
-[twoJ, P, twoT] = [1, 1, 1]
-jmax = 2
+    hdf5_file = os.path.join(output_dir, f"{hdf5_file}.h5")
 
-# 3NF part and mesh info
-part, nmesh = "c1", 8
+    Nalpha = len(alpha_channels)
+    Np, Nq = len(p_mesh), len(q_mesh)
+
+    pw_data = {
+        "L_12": np.array([c[0] for c in alpha_channels], dtype=np.int32),
+        "S_12": np.array([c[1] for c in alpha_channels], dtype=np.int32),
+        "J_12": np.array([c[2] for c in alpha_channels], dtype=np.int32),
+        "T_12": np.array([c[3] for c in alpha_channels], dtype=np.int32),
+        "l_3": np.array([c[4] for c in alpha_channels], dtype=np.int32),
+        "2*j_3": np.array([c[5] for c in alpha_channels], dtype=np.int32),
+    }
+
+    matrix = np.zeros((Nalpha, Nq, Np, Nalpha, Nq, Np), dtype=np.float32)
+
+    for i in range(Nalpha):
+        for j in range(Nalpha):
+            bin_file = f"data/kernel-alpha-{part}-bra{i+1}-ket{j+1}-nmesh{nmesh}.bin"
+            if os.path.exists(bin_file):
+                mtx = read_binary_file(bin_file, (Np, Nq, Np, Nq))
+                for ip in range(Np):
+                    for iq in range(Nq):
+                        for jp in range(Np):
+                            for jq in range(Nq):
+                                matrix[i, iq, ip, j, jq, jp] = mtx[ip, iq, jp, jq]
+
+    with h5py.File(hdf5_file, "w") as f:
+        f.create_dataset("Nalpha", data=np.int32(Nalpha))
+        f.create_dataset("Np", data=np.int32(Np))
+        f.create_dataset("Nq", data=np.int32(Nq))
+
+        p_group = f.create_group("p mesh")
+        p_group.create_dataset("mesh point", data=np.array(p_mesh, dtype=np.float64))
+        p_group.create_dataset("mesh weight", data=np.ones(Np, dtype=np.float64))
+
+        q_group = f.create_group("q mesh")
+        q_group.create_dataset("mesh point", data=np.array(q_mesh, dtype=np.float64))
+        q_group.create_dataset("mesh weight", data=np.ones(Nq, dtype=np.float64))
+
+        chan_group = f.create_group("pw channels")
+        for key, val in pw_data.items():
+            chan_group.create_dataset(key, data=val)
+
+        f.create_dataset("matrix elements", data=matrix)
+
+    print(f"\nHDF5 output saved to: {hdf5_file}")
 
 
 @timing
 def main():
+    number_pmesh = 16
+    number_qmesh = 16
+    shape = (number_pmesh, number_qmesh, number_pmesh, number_qmesh)
+    twoJ, P, twoT = 1, 1, 1
+    jmax = 2
+    part, nmesh = "c1", 8
+
+    os.makedirs("data", exist_ok=True)
     beta_channel_file = f"data/channel_beta_info_twoJ{twoJ}_P{P}_twoT{twoT}.txt"
     beta_pw_info = read_beta_pw_info(beta_channel_file)
     ws.init(24, "Jmax", 9)
@@ -146,6 +195,11 @@ def main():
                                 chan_mtx += factor * beta_mtx
             alpha_mtx_file = f"data/kernel-alpha-{part}-bra{idx_bra + 1}-ket{idx_ket + 1}-nmesh{nmesh}.bin"
             write_binary_file(chan_mtx, alpha_mtx_file)
+
+    p_mesh = np.linspace(0, 2.0, number_pmesh)
+    q_mesh = np.linspace(0, 2.0, number_qmesh)
+    hdf5_file = f"3NF_V_J3_{twoJ}_PAR_{P}_T3_{twoT}_N2LO_{part}"
+    save_as_hdf5(alpha_channels, twoJ, P, twoT, part, nmesh, p_mesh, q_mesh, hdf5_file)
 
 
 if __name__ == "__main__":
